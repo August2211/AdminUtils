@@ -44,3 +44,30 @@ std::string ToLower(std::string str)
 	std::transform(str.begin(), str.end(), str.begin(), ::tolower);
 	return str;
 }
+
+SDK::UWorld* GetWorld()
+{
+	static SDK::UWorld* world = nullptr;
+
+	if (!world)
+	{
+		for (int i = 0; i < SDK::UObject::GObjects->Num(); i++)
+		{
+			SDK::UObject* Object = SDK::UObject::GObjects->GetByIndex(i);
+			if (!Object) continue;
+
+			if (Object->IsA(SDK::UWorld::StaticClass()))
+			{
+				if (Object->IsDefaultObject())
+				{
+					continue;
+				}
+
+				world = static_cast<SDK::UWorld*>(Object);
+				break;
+			}
+		}
+	}
+
+	return world;
+}
